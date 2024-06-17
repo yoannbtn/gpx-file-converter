@@ -89,10 +89,10 @@ def upload_file():
     file = request.files['file']
     if file.filename == '':
         return "No selected file", 400
-    
+
     output_file_path = convert_gpx(file)
-    
-    return send_file(output_file_path, as_attachment=True, download_name='GP39_Compatible_File.xml')
+
+    return send_file(output_file_path, as_attachment=True, download_name='GP39_Compatible_File.gpx')
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
