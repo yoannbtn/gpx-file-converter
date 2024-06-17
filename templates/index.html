@@ -12,6 +12,8 @@
         button { padding: 10px 20px; background-color: #4CAF50; color: white; border: none; cursor: pointer; }
         button:hover { background-color: #45a049; }
         footer { margin-top: 40px; text-align: center; color: #777; }
+        #download-container { display: none; margin-top: 20px; }
+        #download-link { margin-top: 20px; }
     </style>
 </head>
 <body>
@@ -21,9 +23,13 @@
             <input type="file" id="file-input" name="file" accept=".gpx" required />
             <button type="submit">Convert</button>
         </form>
-        <div id="download-link" style="display: none;">
+        <div id="download-container">
             <h2>Download Converted File</h2>
-            <a id="converted-file" href="#" download="GP39_Compatible_File.gpx">Click here to download</a>
+            <input type="text" id="filename-input" placeholder="Enter file name" />
+            <button id="download-button">Download</button>
+            <div id="download-link" style="display: none;">
+                <a id="converted-file" href="#">Click here to download</a>
+            </div>
         </div>
     </div>
 
@@ -45,9 +51,19 @@
             .then(response => response.blob())
             .then(blob => {
                 var url = window.URL.createObjectURL(blob);
-                var a = document.getElementById('converted-file');
-                a.href = url;
-                document.getElementById('download-link').style.display = 'block';
+                var downloadButton = document.getElementById('download-button');
+                var downloadLink = document.getElementById('converted-file');
+                var downloadContainer = document.getElementById('download-container');
+
+                downloadButton.onclick = function() {
+                    var filename = document.getElementById('filename-input').value || 'GP39_Compatible_File';
+                    filename = filename.endsWith('.gpx') ? filename : filename + '.gpx';
+                    downloadLink.href = url;
+                    downloadLink.download = filename;
+                    document.getElementById('download-link').style.display = 'block';
+                };
+
+                downloadContainer.style.display = 'block';
             })
             .catch(error => console.error('Error:', error));
         });
