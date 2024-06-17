@@ -1,7 +1,7 @@
-from flask import Flask, request, send_file
 import os
-from lxml import etree
+from flask import Flask, request, send_file, render_template
 import tempfile
+from lxml import etree
 
 app = Flask(__name__)
 
@@ -84,6 +84,10 @@ def convert_gpx(input_file):
     temp_file.close()
     return temp_file.name
 
+@app.route('/')
+def index():
+    return render_template('index.html')
+
 @app.route('/convert', methods=['POST'])
 def upload_file():
     if 'file' not in request.files:
@@ -97,4 +101,5 @@ def upload_file():
     return send_file(output_file_path, as_attachment=True, download_name='converted.gpx')
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port)
