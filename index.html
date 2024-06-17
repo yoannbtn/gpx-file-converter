@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GPX File Converter</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        h1 { color: #333; }
+        .container { max-width: 600px; margin: 0 auto; }
+        input[type="file"] { margin: 20px 0; }
+        button { padding: 10px 20px; background-color: #4CAF50; color: white; border: none; cursor: pointer; }
+        button:hover { background-color: #45a049; }
+        footer { margin-top: 40px; text-align: center; color: #777; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Upload and Convert OpenCPN GPX File to GP39 Compatible File</h1>
+        <form id="upload-form" enctype="multipart/form-data">
+            <input type="file" id="file-input" name="file" accept=".gpx" required />
+            <button type="submit">Convert</button>
+        </form>
+        <div id="download-link" style="display: none;">
+            <h2>Download Converted File</h2>
+            <a id="converted-file" href="#" download>Click here to download</a>
+        </div>
+    </div>
+
+    <footer>
+        &copy; 2024 Yoann Betton
+    </footer>
+
+    <script>
+        document.getElementById('upload-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            var formData = new FormData();
+            var fileInput = document.getElementById('file-input');
+            formData.append('file', fileInput.files[0]);
+
+            fetch('/convert', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.blob())
+            .then(blob => {
+                var url = window.URL.createObjectURL(blob);
+                var a = document.getElementById('converted-file');
+                a.href = url;
+                document.getElementById('download-link').style.display = 'block';
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    </script>
+</body>
+</html>
