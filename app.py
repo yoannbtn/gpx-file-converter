@@ -1,5 +1,5 @@
 import os
-from flask import Flask, request, send_file, render_template
+from flask import Flask, request, send_from_directory, render_template
 import tempfile
 from lxml import etree
 
@@ -91,8 +91,9 @@ def upload_file():
         return "No selected file", 400
     
     output_file_path = convert_gpx(file)
+    directory, filename = os.path.split(output_file_path)
     
-    return send_file(output_file_path, as_attachment=True, download_name='GP39_Compatible_File.gpx', mimetype='application/gpx+xml')
+    return send_from_directory(directory, filename, as_attachment=True, download_name='GP39_Compatible_File.gpx', mimetype='application/gpx+xml')
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
