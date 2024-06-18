@@ -13,7 +13,6 @@
         button:hover { background-color: #45a049; }
         footer { margin-top: 40px; text-align: center; color: #777; }
         #download-container { display: none; margin-top: 20px; }
-        #download-link { margin-top: 20px; }
     </style>
 </head>
 <body>
@@ -27,9 +26,6 @@
             <h2>Download Converted File</h2>
             <input type="text" id="filename-input" value="GP39_WptRte.gpx" />
             <button id="download-button">Download</button>
-            <div id="download-link" style="display: none;">
-                <a id="converted-file" href="#">Click here to download</a>
-            </div>
         </div>
     </div>
 
@@ -52,18 +48,19 @@
             .then(blob => {
                 var url = window.URL.createObjectURL(blob);
                 var downloadButton = document.getElementById('download-button');
-                var downloadLink = document.getElementById('converted-file');
-                var downloadContainer = document.getElementById('download-container');
 
                 downloadButton.onclick = function() {
                     var filename = document.getElementById('filename-input').value || 'GP39_Compatible_File';
                     filename = filename.endsWith('.gpx') ? filename : filename + '.gpx';
-                    downloadLink.href = url;
-                    downloadLink.download = filename;
-                    document.getElementById('download-link').style.display = 'block';
+                    var a = document.createElement('a');
+                    a.href = url;
+                    a.download = filename;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
                 };
 
-                downloadContainer.style.display = 'block';
+                document.getElementById('download-container').style.display = 'block';
             })
             .catch(error => console.error('Error:', error));
         });
